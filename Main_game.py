@@ -35,7 +35,9 @@ class TicTac:
     Current_player=Player_alternatives[0]
     def __init__(self,x,y,size,lines=3,thickness=2):
         self.winner=None
-        
+        self.thickness=thickness
+        #self.super_subsidery=subsidery_target
+        #subsidery_target=None
         self.amount=size*2/lines
         #self.subsidery_areal=int(self.amount*2)
         self.subsidery_middle=int(self.amount/2)
@@ -76,6 +78,7 @@ class TicTac:
         self.winner=None
     
     def handle_click(self,x,y):
+        
         for index, hitbox in enumerate(self.hitboxes):
             check=[False,False]
             if hitbox[0][0] < x and hitbox[0][1] > x:
@@ -84,7 +87,7 @@ class TicTac:
                 check[1]=True
             if check[0] == True and check[1] == True and self.game_status[index][0]=="_":
                 self.game_status[index][0]=self.Current_player
-                self.switch_turn()
+                TicTac.switch_turn(TicTac)
 
     def check_winner(self):
         self.Vicotry_options=[]
@@ -126,13 +129,19 @@ class TicTac:
                 self.winner="O"
             if all(element == self.Player_alternatives[1] for element in option):
                 self.winner="X"
-                
-                
-        
+    
+    def Cheat_win(self,Overpower=False):
+        if Overpower== True:
+            for tile in self.game_status:
+                tile[0]=self.Current_player
+        else:
+            for tile in self.game_status:
+                if tile[0]=="_":
+                    tile[0]=self.Current_player
     
     def draw_base(self):
         for line in self.points:
-            pygame.draw.line(screen,"white",line[0],line[1])
+            pygame.draw.line(screen,"white",line[0],line[1],self.thickness)
         
         for sign in self.game_status:
             if sign[0]=="X":
@@ -142,17 +151,13 @@ class TicTac:
         
         if self.winner != None:
             if self.winner=="O":
-                self.draw_O(self.Start_X, self.Start_Y, self.amount*1.5)
+                self.draw_O(self.Start_X, self.Start_Y, self.amount*2)
             else:
-                self.draw_X(self.Start_X, self.Start_Y, self.amount*1.5)
-
-    
+                self.draw_X(self.Start_X, self.Start_Y, self.amount*2)
     def draw_X(self,middleX,middleY,size):
         pygame.draw.circle(screen,"red",(middleX,middleY), size)
     def draw_O(self,middleX,middleY,size):
         pygame.draw.circle(screen,"white",(middleX,middleY), size)
-    
-    
         
     @classmethod
     def check_hitboxes(cls, x, y):
@@ -177,11 +182,38 @@ class TicTac:
             cls.Current_player=cls.Player_alternatives[1]
         else:
             cls.Current_player=cls.Player_alternatives[0]
-            
-    def sort(cls):
-        pass
 
-TicTac(screenie[0]//2,screenie[1]//2,300)
+
+class SuperTicTac(TicTac):
+    Superlets=[]
+    def __init__(self,x,y,size,Layers=1,lines=3,thickness=5):
+        super().__init__(x, y,size,lines,thickness)
+        TicTac.Taccies.remove(self)
+        self.Superlets.append(self)
+        for game in self.game_status:
+            TicTac(game[1], game[2], self.amount/2.5)
+
+    def draw_base(self):
+        for line in self.points:
+            pygame.draw.line(screen,"white",line[0],line[1],self.thickness)
+
+class Eye:
+    Channels=[]
+    
+    def __init__(self,x,y,size,colour):
+        self.x=x
+        self.y=y
+        self.colour=colour
+        self.size=size
+        self.Channels.append(self)
+        
+    def draw_self(self):
+        pygame.draw.circle(screen,self.colour,(self.x,self.y),self.size)
+
+
+
+SuperTicTac(screenie[0]//2,screenie[1]//2,300)
+bob=Eye(100,100,50,"white")
 
 while running:
     current_time=time.time()
@@ -194,21 +226,37 @@ while running:
                 TicTac.check_hitboxes(event.pos[0],event.pos[1])
 
     screen.fill("black")
+    
+    Gamer=TicTac.Current_player
+    """
+    if Gamer =="X":
+        for Channel in Eye.Channels:
+            Channel.colour="red"
+    elif Gamer =="O":
+        for Channel in Eye.Channels:
+            Channel.colour="White"
+            
+    """
     #Hitbox checks
     for TiccityTac in TicTac.Taccies:
         TiccityTac.draw_base()
         TiccityTac.check_winner()
+    for Superduper in SuperTicTac.Superlets:
+        Superduper.draw_base()
+        #print(Superduper.game_status)
     
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
+    if keys[pygame.K_r]:
         for TiccityTac in TicTac.Taccies:
             TiccityTac.reset()
-
+    if keys[pygame.K_w]:
+        for TiccityTac in TicTac.Taccies:
+            TiccityTac.Cheat_win()
+        #TicTac.switch_turn(TicTac)
+    
+    for Channel in Eye.Channels:
+        Channel.draw_self()
     pygame.display.flip()
-
-    # limits FPS to 60
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
     dt = clock.tick(60) / 1000
 
 pygame.quit()
