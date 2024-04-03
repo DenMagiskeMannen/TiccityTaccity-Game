@@ -56,6 +56,7 @@ class TicTac:
             self.points.append(line)
         self.lines=lines
         self.hitboxes=[]
+        # consider making this a dict or dataclass?
         self.game_status=[]
         #Makes Individual hitboxes for the boxes?
         for x in range(lines):
