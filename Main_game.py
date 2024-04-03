@@ -36,6 +36,7 @@ class TicTac:
     def __init__(self,x,y,size,lines=3,thickness=2):
         self.winner=None
         self.thickness=thickness
+        self.size=size
         #self.super_subsidery=subsidery_target
         #subsidery_target=None
         self.amount=size*2/lines
@@ -151,9 +152,9 @@ class TicTac:
         
         if self.winner != None:
             if self.winner=="O":
-                self.draw_O(self.Start_X, self.Start_Y, self.amount*2)
+                self.draw_O(self.Start_X, self.Start_Y, self.size)
             else:
-                self.draw_X(self.Start_X, self.Start_Y, self.amount*2)
+                self.draw_X(self.Start_X, self.Start_Y, self.size)
     def draw_X(self,middleX,middleY,size):
         pygame.draw.circle(screen,"red",(middleX,middleY), size)
     def draw_O(self,middleX,middleY,size):
@@ -186,12 +187,13 @@ class TicTac:
 
 class SuperTicTac(TicTac):
     Superlets=[]
-    def __init__(self,x,y,size,Layers=1,lines=3,thickness=5):
-        super().__init__(x, y,size,lines,thickness)
+    def __init__(self,x,y,size,lines=3,thickness=5,Layers=1):
+        self.lines=lines
+        super().__init__(x, y, size, lines, thickness)
         TicTac.Taccies.remove(self)
         self.Superlets.append(self)
         for game in self.game_status:
-            TicTac(game[1], game[2], self.amount/2.5)
+            TicTac(game[1], game[2], self.amount/2.5,self.lines)
 
     def draw_base(self):
         for line in self.points:
@@ -212,8 +214,10 @@ class Eye:
 
 
 
-SuperTicTac(screenie[0]//2,screenie[1]//2,300)
+SuperTicTac(screenie[0]//2,screenie[1]//2,300,3)
+
 bob=Eye(100,100,50,"white")
+#GAME(5)
 
 while running:
     current_time=time.time()
@@ -228,7 +232,7 @@ while running:
     screen.fill("black")
     
     Gamer=TicTac.Current_player
-    """
+    
     if Gamer =="X":
         for Channel in Eye.Channels:
             Channel.colour="red"
@@ -236,7 +240,7 @@ while running:
         for Channel in Eye.Channels:
             Channel.colour="White"
             
-    """
+    
     #Hitbox checks
     for TiccityTac in TicTac.Taccies:
         TiccityTac.draw_base()
