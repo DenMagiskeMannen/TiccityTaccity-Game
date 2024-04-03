@@ -16,4 +16,5 @@ Start the game by typing
 python Main_game.py
 ```
 
-Hit <kbd>W</kbd> to reset the game
+Hit <kbd>W</kbd> to Win the game
+Hit <kbd>R</kbd> to reset the game
