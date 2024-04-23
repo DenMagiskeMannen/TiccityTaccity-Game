@@ -190,11 +190,13 @@ class SuperTicTac(TicTac):
     Superlets=[]
     def __init__(self,x,y,size,lines=3,thickness=5,Layers=1):
         self.lines=lines
+        self.Tacclets=[]
         super().__init__(x, y, size, lines, thickness)
         TicTac.Taccies.remove(self)
         self.Superlets.append(self)
         for game in self.game_status:
-            TicTac(game[1], game[2], self.amount/2.5,self.lines)
+            piece=TicTac(game[1], game[2], self.amount/2.5,self.lines)
+            self.Tacclets.append(piece)
 
     def draw_base(self):
         for line in self.points:
@@ -215,7 +217,8 @@ class Eye:
 
 
 
-SuperTicTac(screenie[0]//2,screenie[1]//2,300,3)
+SuperTicTac(screenie[0]//2,screenie[1]//2,350,7)
+#TicTac(screenie[0]//2,screenie[1]//2,300)
 
 bob=Eye(100,100,50,"white")
 #GAME(5)
